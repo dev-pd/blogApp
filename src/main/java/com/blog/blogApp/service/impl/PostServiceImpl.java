@@ -33,6 +33,7 @@ public class PostServiceImpl implements PostService {
         //The saved Entity is then converted to DTO to transfer
         //Decouple DTO and Entity
         PostDTO postDTOResponse = new PostDTO();
+        postDTOResponse.setId(savedPost.getId());
         postDTOResponse.setTitle(savedPost.getTitle());
         postDTOResponse.setDescription(savedPost.getDescription());
         postDTOResponse.setContent(savedPost.getContent());
