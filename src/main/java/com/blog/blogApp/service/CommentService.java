@@ -9,5 +9,5 @@ public interface CommentService {
     List<CommentDTO> getCommentsByPostID(Long postID);
     CommentDTO getCommentById(Long postID, Long commentID);
     CommentDTO updateComment(Long postID, Long commentID, CommentDTO comment);
-    String deleteComment(Long postID, Long commentID);
+    Void deleteComment(Long postID, Long commentID);
 }
