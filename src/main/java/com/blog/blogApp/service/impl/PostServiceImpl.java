@@ -25,7 +25,7 @@ public class PostServiceImpl implements PostService {
         this.postRepository = postRepository;
     }
 
-    private Post mapToEntity(PostDTO postDTO) {
+    private Post mapToPostEntity(PostDTO postDTO) {
         Post post = new Post();
         post.setTitle(postDTO.getTitle());
         post.setDescription(postDTO.getDescription());
@@ -33,7 +33,7 @@ public class PostServiceImpl implements PostService {
         return post;
     }
 
-    private PostDTO mapToDTO(Post post) {
+    private PostDTO mapToPostDTO(Post post) {
         PostDTO postDTO = new PostDTO();
         postDTO.setId(post.getId());
         postDTO.setTitle(post.getTitle());
@@ -44,21 +44,23 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostDTO createPost(PostDTO postDTO) {
-        Post post = mapToEntity(postDTO);
+        Post post = mapToPostEntity(postDTO);
         Post savedPost = postRepository.save(post);
-        PostDTO postDTOResponse = mapToDTO(savedPost);
+        PostDTO postDTOResponse = mapToPostDTO(savedPost);
         return postDTOResponse;
     }
 
     @Override
-    public PostResponseDTO getAllPosts(Integer pageNumber, Integer pageSize, String sortBy) {
+    public PostResponseDTO getAllPosts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
 
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(sortBy));
+        Sort sort = sortOrder.equalsIgnoreCase(Sort.Direction.ASC.name()) ? Sort.by(sortBy).ascending() :
+                Sort.by(sortBy).descending();
+        Pageable pageable = PageRequest.of(pageNumber, pageSize, sort);
         Page<Post> posts = postRepository.findAll(pageable);
         //List<Post> posts = postRepository.findAll();
 
         List<Post> postList = posts.getContent();
-        List<PostDTO> content = postList.stream().map(post -> mapToDTO(post)).collect(Collectors.toList());
+        List<PostDTO> content = postList.stream().map(post -> mapToPostDTO(post)).collect(Collectors.toList());
 
         PostResponseDTO postResponseDTO = new PostResponseDTO();
         postResponseDTO.setContent(content);
@@ -74,7 +76,7 @@ public class PostServiceImpl implements PostService {
     @Override
     public PostDTO getPostById(Long id) {
         Post post = postRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException("Post", "id", id));
-        return mapToDTO(post);
+        return mapToPostDTO(post);
     }
 
     @Override
@@ -88,7 +90,7 @@ public class PostServiceImpl implements PostService {
 
         Post savedPost = postRepository.save(post);
 
-        PostDTO postDTOResponse = mapToDTO(savedPost);
+        PostDTO postDTOResponse = mapToPostDTO(savedPost);
 
         return postDTOResponse;
     }
