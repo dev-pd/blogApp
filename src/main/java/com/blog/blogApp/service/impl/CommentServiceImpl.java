@@ -8,6 +8,7 @@ import com.blog.blogApp.payload.CommentDTO;
 import com.blog.blogApp.repository.CommentRepository;
 import com.blog.blogApp.repository.PostRepository;
 import com.blog.blogApp.service.CommentService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
@@ -20,28 +21,30 @@ public class CommentServiceImpl implements CommentService {
 
     private CommentRepository commentRepository;
     private PostRepository postRepository;
+    private ModelMapper modelMapper;
 
     @Autowired
     public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
+        this.modelMapper = modelMapper;
     }
 
     private CommentDTO mapToCommentDTO(Comment comment) {
-        CommentDTO commentDTO = new CommentDTO();
-        commentDTO.setId(comment.getId());
-        commentDTO.setName(comment.getName());
-        commentDTO.setEmail(comment.getEmail());
-        commentDTO.setBody(comment.getBody());
+        CommentDTO commentDTO = modelMapper.map(comment, CommentDTO.class);
+//        commentDTO.setId(comment.getId());
+//        commentDTO.setName(comment.getName());
+//        commentDTO.setEmail(comment.getEmail());
+//        commentDTO.setBody(comment.getBody());
         return commentDTO;
     }
 
     private Comment mapToCommentEntity(CommentDTO commentDTO) {
-        Comment commentEntity = new Comment();
-        commentEntity.setId(commentDTO.getId());
-        commentEntity.setName(commentDTO.getName());
-        commentEntity.setEmail(commentDTO.getEmail());
-        commentEntity.setBody(commentDTO.getBody());
+        Comment commentEntity = modelMapper.map(commentDTO, Comment.class);
+//        commentEntity.setId(commentDTO.getId());
+//        commentEntity.setName(commentDTO.getName());
+//        commentEntity.setEmail(commentDTO.getEmail());
+//        commentEntity.setBody(commentDTO.getBody());
         return commentEntity;
     }
 
