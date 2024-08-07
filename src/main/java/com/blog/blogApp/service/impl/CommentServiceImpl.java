@@ -27,7 +27,7 @@ public class CommentServiceImpl implements CommentService {
     public CommentServiceImpl(CommentRepository commentRepository, PostRepository postRepository) {
         this.commentRepository = commentRepository;
         this.postRepository = postRepository;
-        this.modelMapper = modelMapper;
+        this.modelMapper = new ModelMapper();
     }
 
     private CommentDTO mapToCommentDTO(Comment comment) {
